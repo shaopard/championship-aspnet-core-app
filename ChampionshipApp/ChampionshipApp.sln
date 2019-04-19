@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChampionshipApp", "ChampionshipApp\ChampionshipApp.csproj", "{2AA441E0-7BE7-4034-B9D1-9A6FC7FC7BD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChampionshipApp", "ChampionshipApp\ChampionshipApp.csproj", "{2AA441E0-7BE7-4034-B9D1-9A6FC7FC7BD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChampionshipAppConsole", "ChampionshipAppConsole\ChampionshipAppConsole.csproj", "{97B900F4-4D0B-45D2-A8F3-074607E9332D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{2AA441E0-7BE7-4034-B9D1-9A6FC7FC7BD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AA441E0-7BE7-4034-B9D1-9A6FC7FC7BD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AA441E0-7BE7-4034-B9D1-9A6FC7FC7BD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97B900F4-4D0B-45D2-A8F3-074607E9332D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97B900F4-4D0B-45D2-A8F3-074607E9332D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97B900F4-4D0B-45D2-A8F3-074607E9332D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97B900F4-4D0B-45D2-A8F3-074607E9332D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
