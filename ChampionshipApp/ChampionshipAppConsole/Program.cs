@@ -1,4 +1,4 @@
-﻿using ChampionshipAppConsole.Sport;
+﻿using ChampionshipAppConsole.ScoreTracking;
 using System;
 
 namespace ChampionshipAppConsole
@@ -20,14 +20,14 @@ namespace ChampionshipAppConsole
                 }
                 else
                 {
-                    var scoreTracker = new ScoreTracker<Tenis>();
+                    var scoreTracker = new ScoreTrackerCreator().CreateScoreTracker();
                     switch (option)
                     {
                         case 0:
                             Console.WriteLine("Quitting");
                             break;
                         case 1:
-                            scoreTracker.PointScored();
+                            scoreTracker.PointScored(new Random().Next(0, 1));
                             break;
                         case 2:
                             Console.WriteLine("Display score. TODO");

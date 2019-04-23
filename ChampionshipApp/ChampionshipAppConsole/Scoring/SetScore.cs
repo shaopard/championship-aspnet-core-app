@@ -6,25 +6,19 @@ namespace ChampionshipAppConsole.Scoring
 {
     class SetScore : IScore
     {
-        public int FirstCompetitorScore { get; set; }
-        public int SecondCompetitorScore { get; set; }
+        public Point[] PlayerScores { get; set; }
 
         private static SetScore setScoreInstance;
-        private SetScore() { }
+        private static readonly int NoOfPlayers = 2;
 
         public static SetScore GetInstance()
         {
             if (setScoreInstance == null)
             {
-                setScoreInstance = new SetScore();
+                setScoreInstance = InitializeSetScore();
             }
 
             return setScoreInstance;
-        }
-
-        public void Add(IScore score)
-        {
-            throw new NotImplementedException();
         }
 
         public void GetWinner()
@@ -32,9 +26,24 @@ namespace ChampionshipAppConsole.Scoring
             throw new NotImplementedException();
         }
 
-        public void Increase()
+        public void Increase(int winningPlayerNumber)
         {
-            throw new NotImplementedException();
+            PlayerScores[winningPlayerNumber].Amount++;
+
+            // not sure what to do when Set Is won
+        }
+
+        private static SetScore InitializeSetScore()
+        {
+            setScoreInstance = new SetScore();
+            setScoreInstance.PlayerScores = new Point[NoOfPlayers];
+
+            for (int i = 0; i < NoOfPlayers; i++)
+            {
+                setScoreInstance.PlayerScores[i] = new Point { Amount = 0 };
+            }
+
+            return setScoreInstance;
         }
     }
 }

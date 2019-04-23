@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Scoring\**" />
+    <EmbeddedResource Remove="Scoring\**" />
+    <None Remove="Scoring\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Enums\" />
   </ItemGroup>
 

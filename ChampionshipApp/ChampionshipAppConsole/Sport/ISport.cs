@@ -7,5 +7,7 @@ namespace ChampionshipAppConsole.Sport
     public interface ISport
     {
         void GenerateScoringTrackers();
+
+        void PointScored();
     }
 }
