@@ -23,6 +23,11 @@ namespace ChampionshipAppConsole.ParentChildScoring.Tennis
             var winningPlayer = GetWinner().PlayerID + 1;
 
             Console.WriteLine($"The match was won by player: { winningPlayer }");
+
+            foreach(var setScore in children)
+            {
+                setScore.Display();
+            }
         }
 
         public override Point GetWinner()
@@ -44,9 +49,10 @@ namespace ChampionshipAppConsole.ParentChildScoring.Tennis
             }
         }
 
-        public override void PointScored(int winningPlayerID)
+        public override void ScorePoint(int winningPlayerID)
         {
             PlayerPoints[winningPlayerID].Amount++;
+            MarkComplete();
         }
     }
 }

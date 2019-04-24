@@ -27,6 +27,11 @@ namespace ChampionshipAppConsole.ParentChildScoring.Tennis
 
             Console.WriteLine($"Player 1 game score: { PlayerPoints[0].Amount } ");
             Console.WriteLine($"Player 2 game score: { PlayerPoints[1].Amount } ");
+
+            foreach(var gameScore in children)
+            {
+                gameScore.Display();
+            }
         }
 
         public override Point GetWinner()
@@ -48,7 +53,7 @@ namespace ChampionshipAppConsole.ParentChildScoring.Tennis
             }
         }
 
-        public override void PointScored(int winningPlayerID)
+        public override void ScorePoint(int winningPlayerID)
         {
             PlayerPoints[winningPlayerID].Amount++;
 

@@ -31,11 +31,16 @@ namespace ChampionshipAppConsole.ParentChildScoring
             children.Add(componentScore);
         }
 
+        protected void RemoveChild(Score<T> score)
+        {
+            children.Remove(score);
+        }
+
         protected void UpdateParentScore(int winningPlayerID)
         {
             if (ParentScore != null)
             {
-                ParentScore.PointScored(winningPlayerID);
+                ParentScore.ScorePoint(winningPlayerID);
             }
         }
 
@@ -52,7 +57,7 @@ namespace ChampionshipAppConsole.ParentChildScoring
 
         public abstract void Display();
 
-        public abstract void PointScored(int winningPlayerID);
+        public abstract void ScorePoint(int winningPlayerID);
 
         public abstract void InitializePlayerPoints();
 

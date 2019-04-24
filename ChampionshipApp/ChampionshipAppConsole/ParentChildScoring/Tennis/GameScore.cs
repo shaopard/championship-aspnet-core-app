@@ -60,7 +60,7 @@ namespace ChampionshipAppConsole.ParentChildScoring.Tennis
             }
         }
 
-        public override void PointScored(int winningPlayerID)
+        public override void ScorePoint(int winningPlayerID)
         {
             if (IsDeuce())
             {
