@@ -1,68 +1,131 @@
-﻿using System;
+﻿using ChampionshipAppConsole.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using ChampionshipAppConsole.ParentChildScoring.Tennis;
 
 namespace ChampionshipAppConsole.ParentChildScoring
 {
-    abstract class Score<T> : ICompletableScore, IDisplayable, IParentComponent<T> where T : Point
+    public abstract class Score : IDisplayable, IParentComponent, IScoreWatcher
     {
-        public T[] PlayerPoints { get; set; }
-        public Score<T> ParentScore { get; set; }
-        public bool IsComplete { get; set; }
-
-        protected List<Score<T>> children = new List<Score<T>>();
         public static readonly int NumberOfPlayers = 2;
 
-        protected Score(Score<T> parentComponent)
-        {
-            ParentScore = parentComponent;
-            PlayerPoints = new T[NumberOfPlayers];
-        }
+        public Point[] PlayerPoints { get; set; }
+        public Player[] Players { get; set; }
+        public Score ParentScore { get; set; }
+        public bool IsBottomScore => !childScores.Any();
+        public bool HasParent => ParentScore != null;
+        public abstract bool IsComplete { get; }
 
-        public void MarkComplete()
-        {
-            IsComplete = true;
-        }
+        protected virtual Point InitPoint() => new Point();
+        protected List<Score> childScores = new List<Score>();
 
-        public void AddChild(Score<T> componentScore)
-        {
-            componentScore.ParentScore = this;
-            children.Add(componentScore);
-        }
+        private Score LastChildScore => childScores.FirstOrDefault(score => !score.IsComplete);
+        private List<IScoreWatcher> _watchers = new List<IScoreWatcher>();
 
-        protected void RemoveChild(Score<T> score)
+        protected Score(Score parentScore)//Factory cu input type of Point.cs
         {
-            children.Remove(score);
-        }
+            ParentScore = parentScore;
+            PlayerPoints = new Point[NumberOfPlayers];
+            Players = new Player[NumberOfPlayers];
 
-        protected void UpdateParentScore(int winningPlayerID)
-        {
-            if (ParentScore != null)
+            for (int i = 0; i < NumberOfPlayers; i++)
             {
-                ParentScore.ScorePoint(winningPlayerID);
+                PlayerPoints[i] = InitPoint();
+                Players[i] = new Player { PlayerID = i };
             }
         }
 
-        protected int GetScorePositionInParent()
-        {
-            return (ParentScore != null) ? ParentScore.children.IndexOf(this) + 1 : 0;
-        }
-
-        protected bool IsRootScore() => ParentScore == null;
-
-        protected bool IsLeafScore() => !children.Any();
-
-        protected int GetLoosingPlayerIndex(int winningPlayerID) => (winningPlayerID == 0) ? 1 : 0;
-
         public abstract void Display();
 
-        public abstract void ScorePoint(int winningPlayerID);
+        public void AddChild(Score componentScore)
+        {
+            componentScore.ParentScore = this;
+            childScores.Add(componentScore);
+        }
 
-        public abstract void InitializePlayerPoints();
+        public virtual void ScorePoint(int winningPlayer)
+        {
+            ScoreUpdate(winningPlayer);
 
-        public abstract void CreateSibling();
+            NotifyWatchers();
+        }
 
-        public abstract T GetWinner();
+        public void Notify(Score score)
+        {
+            if (score.IsComplete)
+            {
+                var winningPlayer = score.GetWinner();
+                Increase(winningPlayer.PlayerID);
+                if (!IsComplete) // && HasParent)
+                {
+                    var newScore = AddNewChildScore();
+                    score.ParentScore.childScores.Add(newScore);
+                }
+                else if (IsComplete && this.GetType().Name == "MatchScore") 
+                {
+                    Console.WriteLine("MatchComplete");
+                }
+            }
+        }
+
+        public virtual Player GetWinner()
+        {
+            var winningPoint = (IsComplete)
+               ? PlayerPoints.OrderByDescending(point => point.Amount).First()
+               : null;
+
+            return (winningPoint != null)
+                ? Players.FirstOrDefault(player => player.PlayerID == winningPoint.PlayerID)
+                : null;
+        }
+
+        public virtual void InitializePlayerPoints()
+        {
+            for (int i = 0; i < NumberOfPlayers; i++)
+            {
+                PlayerPoints[i] = new Point
+                {
+                    PlayerID = i,
+                    Amount = 0
+                };
+            }
+        }
+
+        
+        protected virtual void ScoreUpdate(int winningPlayer)
+        {
+            LastChildScore.ScorePoint(winningPlayer);
+        }
+
+        protected virtual void Increase(int winningPlayer)
+        {
+            PlayerPoints[winningPlayer].Amount++;
+        }
+
+        protected Score AddNewChildScore()
+        {
+            Score child = CreateNewChildScore();
+            child.AttachScoreWatcher(this);
+
+            return child;
+        }
+
+        protected virtual int GetScorePositionInParent() 
+            => (ParentScore != null) ? (ParentScore.childScores.IndexOf(this)) + 1 : 0;
+
+        protected abstract Score CreateNewChildScore();
+
+        protected void NotifyWatchers()
+        {
+            foreach (var watcher in _watchers)
+            {
+                watcher.Notify(this);
+            }
+        }
+
+        private void AttachScoreWatcher(IScoreWatcher score)
+        {
+            _watchers.Add(score);
+        }
     }
 }

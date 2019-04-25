@@ -12,6 +12,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="GameEndTracker.cs" />
+    <Compile Remove="IChangeTracker.cs" />
+    <Compile Remove="IEndTracker.cs" />
+    <Compile Remove="MatchEndTracker.cs" />
+    <Compile Remove="ScoreTracker.cs" />
+    <Compile Remove="ScoreTrackerCreator.cs" />
+    <Compile Remove="ScoreTracking\MatchEndTracker.cs" />
+    <Compile Remove="ScoreTracking\ScoreTracker.cs" />
+    <Compile Remove="ScoreTracking\SetEndTracker.cs" />
+    <Compile Remove="SetEndTracker.cs" />
+    <Compile Remove="Sport\Tenis.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Enums\" />
   </ItemGroup>
 

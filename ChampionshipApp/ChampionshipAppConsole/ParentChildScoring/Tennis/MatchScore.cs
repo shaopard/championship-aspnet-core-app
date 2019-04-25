@@ -1,58 +1,47 @@
-﻿using System;
+﻿using ChampionshipAppConsole.Model;
+using System;
 using System.Linq;
 
 namespace ChampionshipAppConsole.ParentChildScoring.Tennis
 {
-    class MatchScore : Score<Point>
+    public class MatchScore : Score
     {
-        public MatchScore(Score<Point> parentComponent) 
-            : base(parentComponent)
+        public override bool IsComplete => PlayerPoints.Any(pp => pp.Amount > 2);
+
+        public MatchScore() 
+            : base(null)
         {
-            var newChild = new SetScore(this);
-            newChild.InitializePlayerPoints();
-            AddChild(newChild);
+            var newChildScore = AddNewChildScore();
+            childScores.Add(newChildScore);
         }
 
-        public override void CreateSibling()
+        protected override Score CreateNewChildScore()
         {
-            throw new Exception("Cannot create sibling for Match score");
+            var newChild = new SetScore(this);
+            newChild.ParentScore = this;
+            newChild.InitializePlayerPoints();
+
+            return newChild;
         }
 
         public override void Display()
         {
-            var winningPlayer = GetWinner().PlayerID + 1;
+            var winningPlayer = GetWinner();
 
-            Console.WriteLine($"The match was won by player: { winningPlayer }");
+            if (winningPlayer != null)
+            {
+                var winningPlayerID = winningPlayer.PlayerID;
+                Console.WriteLine($"The match was won by player: { winningPlayerID }");
+            }
+            else
+            {
+                Console.WriteLine($"The match is ongoing.");
+            }
 
-            foreach(var setScore in children)
+            foreach (var setScore in childScores)
             {
                 setScore.Display();
             }
-        }
-
-        public override Point GetWinner()
-        {
-            return (IsComplete)
-                ? PlayerPoints.OrderByDescending(point => point.Amount).First()
-                : null;
-        }
-
-        public override void InitializePlayerPoints()
-        {
-            for (int i = 0; i < NumberOfPlayers; i++)
-            {
-                PlayerPoints[i] = new Point
-                {
-                    PlayerID = i,
-                    Amount = 0
-                };
-            }
-        }
-
-        public override void ScorePoint(int winningPlayerID)
-        {
-            PlayerPoints[winningPlayerID].Amount++;
-            MarkComplete();
         }
     }
 }

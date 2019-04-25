@@ -1,5 +1,7 @@
-﻿using ChampionshipAppConsole.ScoreTracking;
+﻿using ChampionshipAppConsole.ParentChildScoring;
+using ChampionshipAppConsole.ScoreTracking;
 using System;
+using System.Linq;
 
 namespace ChampionshipAppConsole
 {
@@ -8,6 +10,8 @@ namespace ChampionshipAppConsole
         static void Main(string[] args)
         {
             int option;
+            Score score;
+            score = new ScoreCreator().CreateScoreTracker();
 
             do
             {
@@ -20,17 +24,24 @@ namespace ChampionshipAppConsole
                 }
                 else
                 {
-                    var scoreTracker = new ScoreTrackerCreator().CreateScoreTracker();
                     switch (option)
                     {
                         case 0:
                             Console.WriteLine("Quitting");
                             break;
                         case 1:
-                            scoreTracker.PointScored(new Random().Next(0, 1));
+                            var winningPlayer = score.PlayerPoints.FirstOrDefault(pp => pp.Amount > 0);
+                            if (winningPlayer != null)
+                            {
+                                Console.WriteLine($"Match was won by player {winningPlayer.PlayerID}");
+                            }
+                            else
+                            {
+                                score.ScorePoint(new Random().Next(0, 1));
+                            }
                             break;
                         case 2:
-                            Console.WriteLine("Display score. TODO");
+                            score.Display();
                             break;
                         default:
                             GenerateUI();

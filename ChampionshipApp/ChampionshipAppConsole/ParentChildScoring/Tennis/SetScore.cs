@@ -1,79 +1,48 @@
-﻿using System;
+﻿using ChampionshipAppConsole.Model;
+using System;
 using System.Linq;
 
 namespace ChampionshipAppConsole.ParentChildScoring.Tennis
 {
-    class SetScore : Score<Point>
+    class SetScore : Score
     {
-        public SetScore(Score<Point> parentScore)
-            : base(parentScore)
+        public override bool IsComplete 
+            => PlayerPoints.Any(pp => pp.Amount == 2)
+                || (PlayerPoints.Count(pp => pp.Amount >= 6) == 1 && PlayerPoints.Count(pp => pp.Amount <= 4) == 1);
+
+        public SetScore(Score parentScoreNode)
+            : base(parentScoreNode)
+        {
+            var newChildScore = AddNewChildScore();
+            childScores.Add(newChildScore);
+        }
+
+        protected override Score CreateNewChildScore()
         {
             var newChild = new GameScore(this);
             newChild.InitializePlayerPoints();
-            AddChild(newChild);
-        }
 
-        public override void CreateSibling()
-        {
-            var newSibling = new SetScore(ParentScore);
-            newSibling.InitializePlayerPoints();
-
-            ParentScore.AddChild(newSibling);
+            return newChild;
         }
 
         public override void Display()
         {
-            Console.WriteLine($"Score for set { GetScorePositionInParent() }:");
+            var winningPlayer = GetWinner();
 
-            Console.WriteLine($"Player 1 game score: { PlayerPoints[0].Amount } ");
-            Console.WriteLine($"Player 2 game score: { PlayerPoints[1].Amount } ");
+            if (winningPlayer != null)
+            {
+                Console.WriteLine($"Player 1 game score: { PlayerPoints[0].Amount } ");
+                Console.WriteLine($"Player 2 game score: { PlayerPoints[1].Amount } ");
+            }
+            else
+            {
+                Console.WriteLine($"Set { GetScorePositionInParent() } is ongoing.");
+            }
 
-            foreach(var gameScore in children)
+            foreach(var gameScore in childScores)
             {
                 gameScore.Display();
             }
-        }
-
-        public override Point GetWinner()
-        {
-            return (IsComplete) 
-                ? PlayerPoints.OrderByDescending(point => point.Amount).First()
-                : null;
-        }
-
-        public override void InitializePlayerPoints()
-        {
-            for (int i = 0; i < NumberOfPlayers; i++)
-            {
-                PlayerPoints[i] = new Point
-                {
-                    PlayerID = i,
-                    Amount = 0
-                };
-            }
-        }
-
-        public override void ScorePoint(int winningPlayerID)
-        {
-            PlayerPoints[winningPlayerID].Amount++;
-
-            if (IsWinPoint(winningPlayerID))
-            {
-                MarkComplete();
-                UpdateParentScore(winningPlayerID);
-                if (!ParentScore.IsComplete)
-                {
-                    CreateSibling();
-                }
-            }
-        }
-
-        private bool IsWinPoint(int winningPlayerID)
-        {
-            var loosingPlayerIndex = GetLoosingPlayerIndex(winningPlayerID);
-
-            return (PlayerPoints[winningPlayerID].Amount == 6 && PlayerPoints[loosingPlayerIndex].Amount < 5) 
-                || PlayerPoints[winningPlayerID].Amount == 7;
         }
     }
 }

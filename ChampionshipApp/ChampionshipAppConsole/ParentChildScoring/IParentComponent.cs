@@ -1,7 +1,7 @@
 ﻿namespace ChampionshipAppConsole.ParentChildScoring
 {
-    interface IParentComponent<T> where T : Point
+    interface IParentComponent
     {
-        void AddChild(Score<T> componentScore);
+        void AddChild(Score componentScore);
     }
 }
