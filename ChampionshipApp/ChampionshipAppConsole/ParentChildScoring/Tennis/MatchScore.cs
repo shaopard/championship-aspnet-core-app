@@ -1,18 +1,19 @@
-﻿using ChampionshipAppConsole.Model;
-using System;
+﻿using System;
 using System.Linq;
 
 namespace ChampionshipAppConsole.ParentChildScoring.Tennis
 {
     public class MatchScore : Score
     {
-        public override bool IsComplete => PlayerPoints.Any(pp => pp.Amount > 2);
+        private readonly int SetsForMatchWin = 2;
+
+        public override bool IsComplete => PlayerPoints.Any(pp => pp.Amount == SetsForMatchWin);
 
         public MatchScore() 
             : base(null)
         {
-            var newChildScore = AddNewChildScore();
-            childScores.Add(newChildScore);
+            var newChildScore = GetNewChildScore();
+            AddChildScore(newChildScore);
         }
 
         protected override Score CreateNewChildScore()
@@ -30,14 +31,10 @@ namespace ChampionshipAppConsole.ParentChildScoring.Tennis
 
             if (winningPlayer != null)
             {
-                var winningPlayerID = winningPlayer.PlayerID;
+                var winningPlayerID = winningPlayer.PlayerID++;
                 Console.WriteLine($"The match was won by player: { winningPlayerID }");
             }
-            else
-            {
-                Console.WriteLine($"The match is ongoing.");
-            }
-
+           
             foreach (var setScore in childScores)
             {
                 setScore.Display();

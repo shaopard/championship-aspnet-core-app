@@ -27,6 +27,13 @@
 
   <ItemGroup>
     <Folder Include="Enums\" />
+    <Folder Include="Sport\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System">
+      <HintPath>System</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -37,35 +37,9 @@ namespace ChampionshipAppConsole.ParentChildScoring
 
         public abstract void Display();
 
-        public void AddChild(Score componentScore)
+        public void AddChildScore(Score score)
         {
-            componentScore.ParentScore = this;
-            childScores.Add(componentScore);
-        }
-
-        public virtual void ScorePoint(int winningPlayer)
-        {
-            ScoreUpdate(winningPlayer);
-
-            NotifyWatchers();
-        }
-
-        public void Notify(Score score)
-        {
-            if (score.IsComplete)
-            {
-                var winningPlayer = score.GetWinner();
-                Increase(winningPlayer.PlayerID);
-                if (!IsComplete) // && HasParent)
-                {
-                    var newScore = AddNewChildScore();
-                    score.ParentScore.childScores.Add(newScore);
-                }
-                else if (IsComplete && this.GetType().Name == "MatchScore") 
-                {
-                    Console.WriteLine("MatchComplete");
-                }
-            }
+            childScores.Add(score);
         }
 
         public virtual Player GetWinner()
@@ -83,15 +57,36 @@ namespace ChampionshipAppConsole.ParentChildScoring
         {
             for (int i = 0; i < NumberOfPlayers; i++)
             {
-                PlayerPoints[i] = new Point
-                {
-                    PlayerID = i,
-                    Amount = 0
-                };
+                PlayerPoints[i] = InitializePlayerPoint(i);
             }
         }
 
-        
+        public void Notify(Score score)
+        {
+            if (score.IsComplete)
+            {
+                var winningPlayer = score.GetWinner();
+                Increase(winningPlayer.PlayerID);
+                if (!IsComplete)
+                {
+                    var newScore = GetNewChildScore();
+                    childScores.Add(newScore);
+                }
+                else if (IsComplete && HasParent && !ParentScore.HasParent) 
+                {
+                    Console.WriteLine("MatchComplete");
+                    ParentScore.Display();
+                }
+            }
+        }
+
+        public virtual void ScorePoint(int winningPlayer)
+        {
+            ScoreUpdate(winningPlayer);
+
+            NotifyWatchers();
+        }
+
         protected virtual void ScoreUpdate(int winningPlayer)
         {
             LastChildScore.ScorePoint(winningPlayer);
@@ -100,14 +95,6 @@ namespace ChampionshipAppConsole.ParentChildScoring
         protected virtual void Increase(int winningPlayer)
         {
             PlayerPoints[winningPlayer].Amount++;
-        }
-
-        protected Score AddNewChildScore()
-        {
-            Score child = CreateNewChildScore();
-            child.AttachScoreWatcher(this);
-
-            return child;
         }
 
         protected virtual int GetScorePositionInParent() 
@@ -123,9 +110,20 @@ namespace ChampionshipAppConsole.ParentChildScoring
             }
         }
 
+        protected Score GetNewChildScore()
+        {
+            Score child = CreateNewChildScore();
+            child.AttachScoreWatcher(this);
+
+            return child;
+        }
+
         private void AttachScoreWatcher(IScoreWatcher score)
         {
             _watchers.Add(score);
         }
+
+        private Point InitializePlayerPoint(int playerID)
+            => new Point { PlayerID = playerID, Amount = 0 };
     }
 }

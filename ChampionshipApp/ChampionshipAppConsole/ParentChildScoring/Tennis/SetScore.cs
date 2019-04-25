@@ -6,15 +6,17 @@ namespace ChampionshipAppConsole.ParentChildScoring.Tennis
 {
     class SetScore : Score
     {
+        private readonly int MinimumGamesForSetWin = 6;
+
         public override bool IsComplete 
-            => PlayerPoints.Any(pp => pp.Amount == 2)
-                || (PlayerPoints.Count(pp => pp.Amount >= 6) == 1 && PlayerPoints.Count(pp => pp.Amount <= 4) == 1);
+            => PlayerPoints.Any(pp => pp.Amount == MinimumGamesForSetWin)
+                || (PlayerPoints.Count(pp => pp.Amount >= MinimumGamesForSetWin) == 1 && PlayerPoints.Count(pp => pp.Amount <= (MinimumGamesForSetWin - 2)) == 1);
 
         public SetScore(Score parentScoreNode)
             : base(parentScoreNode)
         {
-            var newChildScore = AddNewChildScore();
-            childScores.Add(newChildScore);
+            var newChildScore = GetNewChildScore();
+            AddChildScore(newChildScore);
         }
 
         protected override Score CreateNewChildScore()
@@ -31,12 +33,8 @@ namespace ChampionshipAppConsole.ParentChildScoring.Tennis
 
             if (winningPlayer != null)
             {
-                Console.WriteLine($"Player 1 game score: { PlayerPoints[0].Amount } ");
-                Console.WriteLine($"Player 2 game score: { PlayerPoints[1].Amount } ");
-            }
-            else
-            {
-                Console.WriteLine($"Set { GetScorePositionInParent() } is ongoing.");
+                Console.WriteLine($"Player 1 set score: { PlayerPoints[0].Amount } ");
+                Console.WriteLine($"Player 2 set score: { PlayerPoints[1].Amount } ");
             }
 
             foreach(var gameScore in childScores)

@@ -6,6 +6,8 @@ namespace ChampionshipAppConsole.ParentChildScoring.Tennis
 {
     internal class GameScore : Score
     {
+        private readonly int MininumPointsToWinGame = 40;
+
         public override bool IsComplete
         {
             get
@@ -55,7 +57,7 @@ namespace ChampionshipAppConsole.ParentChildScoring.Tennis
             {
                 var winningPoint = PlayerPoints.Cast<GamePoint>().ToList()
                     .OrderByDescending(playerPoint => playerPoint.Amount)
-                    .FirstOrDefault(point => point.HasAdvantage || point.Amount == 40);
+                    .FirstOrDefault(point => point.HasAdvantage || point.Amount == MininumPointsToWinGame);
 
                 winningPlayer = Players.FirstOrDefault(player => player.PlayerID == winningPoint.PlayerID);
             }
@@ -67,12 +69,7 @@ namespace ChampionshipAppConsole.ParentChildScoring.Tennis
         {
             for (int i = 0; i < NumberOfPlayers; i++)
             {
-                PlayerPoints[i] = new GamePoint
-                {
-                    PlayerID = i,
-                    Amount = 0,
-                    HasAdvantage = false
-                };
+                PlayerPoints[i] = InitializePlayerPoint(i);
             }
         }
         public override void ScorePoint(int winningPlayerID)
@@ -106,19 +103,19 @@ namespace ChampionshipAppConsole.ParentChildScoring.Tennis
 
         private bool IsSimpleScoringUpdate()
         {
-            return (PlayerPoints.Cast<GamePoint>().ToList()).All(pp => pp.Amount <= 40 && !pp.HasAdvantage)
-                && PlayerPoints.Any(pp => pp.Amount < 40);
+            return (PlayerPoints.Cast<GamePoint>().ToList()).All(pp => pp.Amount <= MininumPointsToWinGame && !pp.HasAdvantage)
+                && PlayerPoints.Any(pp => pp.Amount < MininumPointsToWinGame);
         }
 
         private bool IsDeuce() => 
-            PlayerPoints[0].Amount == 40 
-            && PlayerPoints[1].Amount == 40 
+            PlayerPoints[0].Amount == MininumPointsToWinGame
+            && PlayerPoints[1].Amount == MininumPointsToWinGame
             && !(PlayerPoints[0] as GamePoint).HasAdvantage 
             && !(PlayerPoints[1] as GamePoint).HasAdvantage;
 
         private bool IsDeuceSavePoint(int winningPlayerID)
         {
-            return PlayerPoints[winningPlayerID].Amount == 40 
+            return PlayerPoints[winningPlayerID].Amount == MininumPointsToWinGame
                 && (PlayerPoints.Cast<GamePoint>().ToList()).Any(pp => pp.HasAdvantage);
         }
 
@@ -136,22 +133,20 @@ namespace ChampionshipAppConsole.ParentChildScoring.Tennis
             {
                 PlayerPoints[winningPlayerID].Amount = 40;
             }
-            else if (PlayerPoints[winningPlayerID].Amount == 40)
-            {
-                PlayerPoints[winningPlayerID].Amount = 50;
-            }
         }
-
 
         private bool IsWinPoint(int winningPlayerNumber)
         {
             int losingPlayerIndex = GetLoosingPlayerIndex(winningPlayerNumber);
 
             return
-                (PlayerPoints[losingPlayerIndex].Amount == 40 && (PlayerPoints[winningPlayerNumber]as GamePoint).HasAdvantage)
-                || (PlayerPoints[losingPlayerIndex].Amount < 40 && PlayerPoints[winningPlayerNumber].Amount == 40);
+                (PlayerPoints[losingPlayerIndex].Amount == MininumPointsToWinGame && (PlayerPoints[winningPlayerNumber]as GamePoint).HasAdvantage)
+                || (PlayerPoints[losingPlayerIndex].Amount < MininumPointsToWinGame && PlayerPoints[winningPlayerNumber].Amount == MininumPointsToWinGame);
         }
 
         private int GetLoosingPlayerIndex(int winningPlayerNumber) => (winningPlayerNumber == 0) ? 1 : 0;
+
+        private GamePoint InitializePlayerPoint(int playerID)
+            => new GamePoint { PlayerID = playerID, Amount = 0, HasAdvantage = false };
     }
 }

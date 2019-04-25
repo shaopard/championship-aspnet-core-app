@@ -2,6 +2,6 @@
 {
     interface IParentComponent
     {
-        void AddChild(Score componentScore);
+        void AddChildScore(Score score);
     }
 }

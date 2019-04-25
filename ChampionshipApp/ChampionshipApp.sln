@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChampionshipApp", "Champion
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChampionshipAppConsole", "ChampionshipAppConsole\ChampionshipAppConsole.csproj", "{97B900F4-4D0B-45D2-A8F3-074607E9332D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChanpionshipAppConsole.UnitTests", "ChanpionshipAppConsole.UnitTests\ChanpionshipAppConsole.UnitTests.csproj", "{88B76FE8-44B1-4F2F-B9A4-9D0FAAA36F04}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChampionshipAppConsole.UnitTests", "ChampionshipAppConsole.UnitTests\ChampionshipAppConsole.UnitTests.csproj", "{94D83D14-15B9-4669-9E7B-AE94F1E052CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{97B900F4-4D0B-45D2-A8F3-074607E9332D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97B900F4-4D0B-45D2-A8F3-074607E9332D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97B900F4-4D0B-45D2-A8F3-074607E9332D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{88B76FE8-44B1-4F2F-B9A4-9D0FAAA36F04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{88B76FE8-44B1-4F2F-B9A4-9D0FAAA36F04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{88B76FE8-44B1-4F2F-B9A4-9D0FAAA36F04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{88B76FE8-44B1-4F2F-B9A4-9D0FAAA36F04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94D83D14-15B9-4669-9E7B-AE94F1E052CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94D83D14-15B9-4669-9E7B-AE94F1E052CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94D83D14-15B9-4669-9E7B-AE94F1E052CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94D83D14-15B9-4669-9E7B-AE94F1E052CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

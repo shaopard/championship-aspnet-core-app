@@ -11,7 +11,7 @@ namespace ChampionshipAppConsole
         {
             int option;
             Score score;
-            score = new ScoreCreator().CreateScoreTracker();
+            score = new ScoreCreator().CreateScore();
 
             do
             {
@@ -33,7 +33,7 @@ namespace ChampionshipAppConsole
                             var winningPlayer = score.PlayerPoints.FirstOrDefault(pp => pp.Amount > 0);
                             if (winningPlayer != null)
                             {
-                                Console.WriteLine($"Match was won by player {winningPlayer.PlayerID}");
+                                Console.WriteLine($"Match was already won by player {winningPlayer.PlayerID}");
                             }
                             else
                             {
@@ -49,8 +49,6 @@ namespace ChampionshipAppConsole
                     }
                 }
             } while (option > 0);
-
-            Console.ReadLine();
         }
 
         private static void GenerateUI()
